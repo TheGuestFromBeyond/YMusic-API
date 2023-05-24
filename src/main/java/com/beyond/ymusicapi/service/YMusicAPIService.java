@@ -6,6 +6,7 @@ import com.beyond.ymusicapi.request.body.CommonBody;
 import com.beyond.ymusicapi.request.body.NewReleasesBody;
 import com.beyond.ymusicapi.request.common.Context;
 import com.beyond.ymusicapi.response.AllSongsResponse;
+import com.beyond.ymusicapi.response.ContinuationPlaylistResponse;
 import com.beyond.ymusicapi.response.MainPlaylistResponse;
 import com.beyond.ymusicapi.response.NewReleasesResponse;
 import com.beyond.ymusicapi.response.parser.ResponseParserFactory;
@@ -59,7 +60,7 @@ public class YMusicAPIService {
         return mainPlaylistResponse;
     }
 
-    private AllSongsResponse getContinuationContent(AllSongsResponse previousResponse) {
+    private ContinuationPlaylistResponse getContinuationContent(AllSongsResponse previousResponse) {
         LinkedList<String> urlParams = new LinkedList<>();
         urlParams.add(previousResponse.getContinuationData().getContinuationToken());
         urlParams.add(previousResponse.getContinuationData().getClickTrackingParams());
@@ -68,7 +69,7 @@ public class YMusicAPIService {
         body.setContext(context);
 
         String jsonResponse = requestProvider.doRequest(apiUrl, body);
-        return (AllSongsResponse) parserFactory.getResponseParser(AllSongsResponse.class).parseResponse(jsonResponse);
+        return (ContinuationPlaylistResponse) parserFactory.getResponseParser(ContinuationPlaylistResponse.class).parseResponse(jsonResponse);
     }
 
     @Autowired
