@@ -4,6 +4,7 @@ import com.beyond.ymusicapi.request.RequestHelper;
 import com.beyond.ymusicapi.request.RequestProvider;
 import com.beyond.ymusicapi.request.body.CommonBody;
 import com.beyond.ymusicapi.request.body.NewReleasesBody;
+import com.beyond.ymusicapi.request.body.RatingBody;
 import com.beyond.ymusicapi.request.common.Context;
 import com.beyond.ymusicapi.response.AllSongsResponse;
 import com.beyond.ymusicapi.response.ContinuationPlaylistResponse;
@@ -46,6 +47,22 @@ public class YMusicAPIService {
             response.getSongItems().addAll(getContinuationContent(response).getSongItems());
         }
         return response;
+    }
+
+    public void setDislikeToSong(String songId) {
+        String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.DISLIKE);
+        RatingBody body = new RatingBody(songId);
+        body.setContext(context);
+
+        requestProvider.doRequest(apiUrl, body);
+    }
+
+    public void setLikeToSong(String songId) {
+        String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.LIKE);
+        RatingBody body = new RatingBody(songId);
+        body.setContext(context);
+
+        requestProvider.doRequest(apiUrl, body);
     }
 
     private MainPlaylistResponse getMainPlaylistByArtistId(String artistId) {

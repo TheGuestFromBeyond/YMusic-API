@@ -30,6 +30,8 @@ public class RequestHelper {
                     .append(params.get(0))
                     .append("&type=next&itct=")
                     .append(params.get(1));
+            case DISLIKE -> url.append("like/dislike?");
+            case LIKE -> url.append("like/like?");
 
         }
         url
@@ -43,6 +45,8 @@ public class RequestHelper {
 
     public enum RequestOperation {
         COMMON_OPERATION,
-        CONTINUATION
+        CONTINUATION,
+        DISLIKE,
+        LIKE
     }
 }
