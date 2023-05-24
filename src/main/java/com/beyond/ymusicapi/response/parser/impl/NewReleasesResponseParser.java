@@ -3,6 +3,7 @@ package com.beyond.ymusicapi.response.parser.impl;
 import com.beyond.ymusicapi.response.AbstractResponse;
 import com.beyond.ymusicapi.response.NewReleasesResponse;
 import com.beyond.ymusicapi.response.model.NewRelease;
+import com.beyond.ymusicapi.response.parser.AbstractParser;
 import com.beyond.ymusicapi.response.parser.Parser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,19 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class NewReleasesResponseParser implements Parser {
+public class NewReleasesResponseParser extends AbstractParser implements Parser {
 
     private ObjectMapper objectMapper;
 
     @Override
     public AbstractResponse parseResponse(String jsonResponse) {
-        JsonNode rootNode = null;
-        try {
-            rootNode = objectMapper.readTree(objectMapper.getJsonFactory()
-                    .createJsonParser(jsonResponse));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JsonNode rootNode = getRootNodeFromStringResponse(jsonResponse);
 
         ArrayNode newReleasesNode = (ArrayNode) rootNode.findValue("gridRenderer").get("items");
         List<NewRelease> newReleaseList = new ArrayList<>();
