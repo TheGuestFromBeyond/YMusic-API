@@ -57,8 +57,12 @@ public class NewReleasesResponseParser implements Parser {
             }
         }
 
-
         return new NewReleasesResponse(newReleaseList);
+    }
+
+    @Override
+    public Class getParserResponseType() {
+        return NewReleasesResponse.class;
     }
 
     @Autowired
