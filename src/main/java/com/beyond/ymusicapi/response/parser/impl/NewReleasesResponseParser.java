@@ -6,20 +6,15 @@ import com.beyond.ymusicapi.response.model.NewRelease;
 import com.beyond.ymusicapi.response.parser.AbstractParser;
 import com.beyond.ymusicapi.response.parser.Parser;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class NewReleasesResponseParser extends AbstractParser implements Parser {
-
-    private ObjectMapper objectMapper;
 
     @Override
     public AbstractResponse parseResponse(String jsonResponse) {
@@ -58,10 +53,5 @@ public class NewReleasesResponseParser extends AbstractParser implements Parser 
     @Override
     public Class getParserResponseType() {
         return NewReleasesResponse.class;
-    }
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 }
