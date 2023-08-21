@@ -1,25 +1,22 @@
 package com.beyond.ymusicapi.request;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.beyond.ymusicapi.config.ServiceConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 
 @Component
 public class RequestHelper {
-    @Value("${youtube.api.url}")
-    private String youtubeUrl;
-    @Value("${youtube.api.prettyPrint}")
-    private String prettyPrint;
-    @Value("${youtube.api.key}")
-    private String key;
+
+    ServiceConfig serviceConfig;
 
     public String generateApiUrl(RequestOperation operation) {
         return generateApiUrl(operation, null);
     }
 
     public String generateApiUrl(RequestOperation operation, LinkedList<String> params) {
-        StringBuilder url = new StringBuilder(youtubeUrl);
+        StringBuilder url = new StringBuilder(serviceConfig.getYoutubeUrl());
         switch (operation) {
             case COMMON_OPERATION -> url.append("browse?");
             case CONTINUATION -> url
@@ -36,9 +33,9 @@ public class RequestHelper {
         }
         url
                 .append("prettyPrint")
-                .append(prettyPrint)
+                .append(serviceConfig.getPrettyPrint())
                 .append("&key")
-                .append(key);
+                .append(serviceConfig.getKey());
 
         return url.toString();
     }
@@ -48,5 +45,10 @@ public class RequestHelper {
         CONTINUATION,
         DISLIKE,
         LIKE
+    }
+
+    @Autowired
+    public void setServiceConfig(ServiceConfig serviceConfig) {
+        this.serviceConfig = serviceConfig;
     }
 }
