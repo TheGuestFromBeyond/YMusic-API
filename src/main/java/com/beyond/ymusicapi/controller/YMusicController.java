@@ -25,6 +25,11 @@ public class YMusicController {
         return service.getAllSongsByArtistId(artistId);
     }
 
+    @GetMapping("/song/{songId}/lyrics")
+    public String getSongLyrics(@PathVariable String songId) {
+         return service.getLyricsBySongId(songId);
+    }
+
     @Autowired
     public void setService(YMusicAPIService service) {
         this.service = service;

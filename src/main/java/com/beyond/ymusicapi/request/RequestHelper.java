@@ -29,6 +29,7 @@ public class RequestHelper {
                     .append(params.get(1));
             case DISLIKE -> url.append("like/dislike?");
             case LIKE -> url.append("like/like?");
+            case LYRICS -> url.append("next?");
 
         }
         url
@@ -44,7 +45,8 @@ public class RequestHelper {
         COMMON_OPERATION,
         CONTINUATION,
         DISLIKE,
-        LIKE
+        LIKE,
+        LYRICS
     }
 
     @Autowired

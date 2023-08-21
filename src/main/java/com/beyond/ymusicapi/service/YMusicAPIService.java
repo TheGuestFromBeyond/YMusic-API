@@ -3,14 +3,14 @@ package com.beyond.ymusicapi.service;
 import com.beyond.ymusicapi.request.RequestHelper;
 import com.beyond.ymusicapi.request.RequestProvider;
 import com.beyond.ymusicapi.request.body.CommonBody;
+import com.beyond.ymusicapi.request.body.LyricsBody;
 import com.beyond.ymusicapi.request.body.NewReleasesBody;
 import com.beyond.ymusicapi.request.body.RatingBody;
 import com.beyond.ymusicapi.request.common.Context;
-import com.beyond.ymusicapi.response.AllSongsResponse;
-import com.beyond.ymusicapi.response.ContinuationPlaylistResponse;
-import com.beyond.ymusicapi.response.MainPlaylistResponse;
-import com.beyond.ymusicapi.response.NewReleasesResponse;
+import com.beyond.ymusicapi.response.*;
 import com.beyond.ymusicapi.response.parser.ResponseParserFactory;
+import com.beyond.ymusicapi.response.parser.impl.LyricsResponseParser;
+import com.beyond.ymusicapi.response.parser.impl.SongLyricsBrowseIdResponseParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +63,24 @@ public class YMusicAPIService {
         body.setContext(context);
 
         requestProvider.doRequest(apiUrl, body);
+    }
+
+    public String getLyricsBySongId(String songId) {
+        String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.LYRICS);
+        LyricsBody body = new LyricsBody();
+        body.setContext(context);
+        body.setVideoId(songId);
+
+        String jsonResponse = requestProvider.doRequest(apiUrl, body);
+        String browseId = ((SongLyricsBrowseIdResponse) parserFactory.getResponseParser(SongLyricsBrowseIdResponseParser.class).parseResponse(jsonResponse)).getBrowseId();
+
+        apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
+        CommonBody commonBody = new CommonBody();
+        commonBody.setContext(context);
+        commonBody.setBrowseId(browseId);
+
+        jsonResponse = requestProvider.doRequest(apiUrl, commonBody);
+        return ((LyricsResponse) parserFactory.getResponseParser(LyricsResponseParser.class).parseResponse(jsonResponse)).getSongLyrics();
     }
 
     private MainPlaylistResponse getMainPlaylistByArtistId(String artistId) {
