@@ -4,6 +4,9 @@ public class MainPlaylistResponse extends AbstractResponse {
     private String artistId;
     private String playlistId;
 
+    public MainPlaylistResponse() {
+    }
+
     public MainPlaylistResponse(String playlistId) {
         this.playlistId = playlistId;
     }

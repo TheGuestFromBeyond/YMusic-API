@@ -6,6 +6,9 @@ import com.beyond.ymusicapi.response.parser.AbstractParser;
 import com.beyond.ymusicapi.response.parser.Parser;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Component
 public class MainPlaylistResponseParser extends AbstractParser implements Parser {
@@ -14,10 +17,16 @@ public class MainPlaylistResponseParser extends AbstractParser implements Parser
     public AbstractResponse parseResponse(String jsonResponse) {
         JsonNode rootNode = getRootNodeFromStringResponse(jsonResponse);
 
-        JsonNode container = rootNode.findValues("musicShelfRenderer").get(0).findValue("runs");
+        List<JsonNode> musicShelfRenderers = rootNode.findValues("musicShelfRenderer");
+        if (CollectionUtils.isEmpty(musicShelfRenderers)) {
+            return new MainPlaylistResponse();
+        }
+        JsonNode container = musicShelfRenderers.get(0).findValue("runs");
         String mainPlaylistId = "";
         if ("Songs".equals(container.findValue("text").asText())) {
-            mainPlaylistId = rootNode.findValues("musicShelfRenderer").get(0).findValue("runs").findValue("browseId").asText();
+            JsonNode playlistNode = musicShelfRenderers.get(0).findValue("runs").findValue("browseId");
+
+            mainPlaylistId = playlistNode == null ? null : playlistNode.asText();
         }
 
         return new MainPlaylistResponse(mainPlaylistId);

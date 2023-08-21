@@ -36,6 +36,9 @@ public class YMusicAPIService {
 
     public AllSongsResponse getAllSongsByArtistId(String artistId) {
         MainPlaylistResponse mainPlaylist = getMainPlaylistByArtistId(artistId);
+        if (mainPlaylist.getPlaylistId() == null) {
+            return null;
+        }
         String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
         CommonBody body = new CommonBody();
         body.setContext(context);
