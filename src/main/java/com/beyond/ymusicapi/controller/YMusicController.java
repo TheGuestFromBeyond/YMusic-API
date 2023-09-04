@@ -1,6 +1,7 @@
 package com.beyond.ymusicapi.controller;
 
 import com.beyond.ymusicapi.response.AllSongsResponse;
+import com.beyond.ymusicapi.response.ChartResponse;
 import com.beyond.ymusicapi.response.NewReleasesResponse;
 import com.beyond.ymusicapi.service.YMusicAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class YMusicController {
     @GetMapping("/song/{songId}/lyrics")
     public String getSongLyrics(@PathVariable String songId) {
          return service.getLyricsBySongId(songId);
+    }
+
+    @GetMapping("/charts/{countryCode}")
+    public ChartResponse getChartDataByCountry(@PathVariable String countryCode) {
+        return service.getChartDataByCountry(countryCode);
     }
 
     @Autowired

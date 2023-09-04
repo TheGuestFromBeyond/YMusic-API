@@ -2,11 +2,9 @@ package com.beyond.ymusicapi.service;
 
 import com.beyond.ymusicapi.request.RequestHelper;
 import com.beyond.ymusicapi.request.RequestProvider;
-import com.beyond.ymusicapi.request.body.CommonBody;
-import com.beyond.ymusicapi.request.body.LyricsBody;
-import com.beyond.ymusicapi.request.body.NewReleasesBody;
-import com.beyond.ymusicapi.request.body.RatingBody;
+import com.beyond.ymusicapi.request.body.*;
 import com.beyond.ymusicapi.request.common.Context;
+import com.beyond.ymusicapi.request.common.FormData;
 import com.beyond.ymusicapi.response.*;
 import com.beyond.ymusicapi.response.parser.ResponseParserFactory;
 import com.beyond.ymusicapi.response.parser.impl.LyricsResponseParser;
@@ -14,6 +12,7 @@ import com.beyond.ymusicapi.response.parser.impl.SongLyricsBrowseIdResponseParse
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 @Service
@@ -108,6 +107,18 @@ public class YMusicAPIService {
 
         String jsonResponse = requestProvider.doRequest(apiUrl, body);
         return (ContinuationPlaylistResponse) parserFactory.getResponseParser(ContinuationPlaylistResponse.class).parseResponse(jsonResponse);
+    }
+
+    public ChartResponse getChartDataByCountry(String countryCode) {
+        String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
+        ChartBody body = new ChartBody();
+        body.setContext(context);
+        body.setBrowseId("FEmusic_charts");
+        body.setParams("sgYMRkVtdXNpY19ob21l");
+        body.setFormData(new FormData(Collections.singletonList(countryCode)));
+
+        String jsonResponse = requestProvider.doRequest(apiUrl, body);
+        return (ChartResponse) parserFactory.getResponseParser(ChartResponse.class).parseResponse(jsonResponse);
     }
 
     @Autowired
