@@ -2,6 +2,7 @@ package com.beyond.ymusicapi.response.parser.impl;
 
 import com.beyond.ymusicapi.response.AbstractResponse;
 import com.beyond.ymusicapi.response.NewReleasesResponse;
+import com.beyond.ymusicapi.response.model.ArtistItem;
 import com.beyond.ymusicapi.response.model.NewRelease;
 import com.beyond.ymusicapi.response.parser.AbstractParser;
 import com.beyond.ymusicapi.response.parser.Parser;
@@ -37,8 +38,7 @@ public class NewReleasesResponseParser extends AbstractParser implements Parser 
                 String artistName = ((TextNode) ((ArrayList) jsonNode.findValue("subtitle").findValues("text")).get(subtitleList.size() - 1)).asText();
 
                 NewRelease newRelease = new NewRelease();
-                newRelease.setArtistId(artistId);
-                newRelease.setArtistName(artistName);
+                newRelease.setArtist(new ArtistItem(artistId, artistName));
                 newRelease.setReleaseName(releaseName);
 
                 newReleaseList.add(newRelease);

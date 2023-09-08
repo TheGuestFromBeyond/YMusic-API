@@ -2,8 +2,7 @@ package com.beyond.ymusicapi.response.model;
 
 public class NewRelease {
     private String releaseName;
-    private String artistName;
-    private String artistId;
+    private ArtistItem artist;
 
     public String getReleaseName() {
         return releaseName;
@@ -13,19 +12,11 @@ public class NewRelease {
         this.releaseName = releaseName;
     }
 
-    public String getArtistName() {
-        return artistName;
+    public ArtistItem getArtist() {
+        return artist;
     }
 
-    public void setArtistName(String artistName) {
-        this.artistName = artistName;
-    }
-
-    public String getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(String artistId) {
-        this.artistId = artistId;
+    public void setArtist(ArtistItem artist) {
+        this.artist = artist;
     }
 }

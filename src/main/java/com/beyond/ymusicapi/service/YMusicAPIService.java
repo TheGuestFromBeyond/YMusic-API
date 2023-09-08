@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Map;
 
 @Service
 public class YMusicAPIService {
@@ -22,26 +23,26 @@ public class YMusicAPIService {
     private ResponseParserFactory parserFactory;
     private Context context;
 
-    public NewReleasesResponse getNewReleases() {
+    public NewReleasesResponse getNewReleases(Map<String, String> headers) {
         String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
         NewReleasesBody body = new NewReleasesBody();
         body.setContext(context);
         body.setBrowseId("FEmusic_new_releases_albums");
 
-        String jsonResponse = requestProvider.doRequest(apiUrl, body);
+        String jsonResponse = requestProvider.doRequest(apiUrl, body, headers);
 
         return (NewReleasesResponse) parserFactory.getResponseParser(NewReleasesResponse.class).parseResponse(jsonResponse);
     }
 
     public AllSongsResponse getAllSongsByArtistId(String artistId) {
-        MainPlaylistResponse mainPlaylist = getMainPlaylistByArtistId(artistId);
-        if (mainPlaylist.getPlaylistId() == null) {
-            return null;
+        AbstractResponse mainPlaylist = getMainPlaylistByArtistId(artistId);
+        if (mainPlaylist instanceof NotPlaylistAllSongResponse) {
+            return (NotPlaylistAllSongResponse) mainPlaylist;
         }
         String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
         CommonBody body = new CommonBody();
         body.setContext(context);
-        body.setBrowseId(mainPlaylist.getPlaylistId());
+        body.setBrowseId(((MainPlaylistResponse) mainPlaylist).getPlaylistId());
 
         String jsonResponse = requestProvider.doRequest(apiUrl, body);
         AllSongsResponse response = (AllSongsResponse) parserFactory.getResponseParser(AllSongsResponse.class).parseResponse(jsonResponse);
@@ -85,7 +86,7 @@ public class YMusicAPIService {
         return ((LyricsResponse) parserFactory.getResponseParser(LyricsResponseParser.class).parseResponse(jsonResponse)).getSongLyrics();
     }
 
-    private MainPlaylistResponse getMainPlaylistByArtistId(String artistId) {
+    private AbstractResponse getMainPlaylistByArtistId(String artistId) {
         String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
         CommonBody body = new CommonBody();
         body.setContext(context);
@@ -93,6 +94,11 @@ public class YMusicAPIService {
 
         String jsonResponse = requestProvider.doRequest(apiUrl, body);
         MainPlaylistResponse mainPlaylistResponse = (MainPlaylistResponse) parserFactory.getResponseParser(MainPlaylistResponse.class).parseResponse(jsonResponse);
+
+        if (mainPlaylistResponse.getPlaylistId() == null) {
+            return parserFactory.getResponseParser(NotPlaylistAllSongResponse.class).parseResponse(jsonResponse);
+        }
+
         mainPlaylistResponse.setArtistId(artistId);
         return mainPlaylistResponse;
     }

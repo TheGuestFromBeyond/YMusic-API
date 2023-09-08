@@ -2,6 +2,8 @@ package com.beyond.ymusicapi.response.parser.impl;
 
 import com.beyond.ymusicapi.response.AbstractResponse;
 import com.beyond.ymusicapi.response.ChartResponse;
+import com.beyond.ymusicapi.response.model.ArtistItem;
+import com.beyond.ymusicapi.response.model.SongItem;
 import com.beyond.ymusicapi.response.parser.AbstractParser;
 import com.beyond.ymusicapi.response.parser.Parser;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,31 +23,43 @@ public class ChartResponseParser extends AbstractParser implements Parser {
         List<JsonNode> shelfRenderers = rootNode.findValues("musicCarouselShelfRenderer");
         for (JsonNode shelfRenderer : shelfRenderers) {
             if ("Top artists".equals(shelfRenderer.findValue("label").asText())) {
-                response.setChartArtistsIds(getTopArtistsIds(shelfRenderer));
+                response.setChartArtists(getTopArtists(shelfRenderer));
             } else if ("Trending".equals(shelfRenderer.findValue("label").asText())) {
-                response.setChartSongsIds(getTopSongsIds(shelfRenderer));
+                response.setChartSongs(getTopSongs(shelfRenderer));
             }
         }
 
         return response;
     }
 
-    private List<String> getTopArtistsIds(JsonNode shelfRenderer) {
-        List<String> topArtistsIds = new ArrayList<>();
+    private List<ArtistItem> getTopArtists(JsonNode shelfRenderer) {
+        List<ArtistItem> topArtists = new ArrayList<>();
         ArrayNode artistItemsArray = (ArrayNode) shelfRenderer.findValue("contents");
         for (JsonNode artistNode : artistItemsArray) {
-            topArtistsIds.add(artistNode.findValue("browseId").asText());
+            String artistId = artistNode.findValue("browseId").asText();
+            String artistName = artistNode.findValue("musicResponsiveListItemFlexColumnRenderer").findValue("runs").findValue("text").asText();
+            topArtists.add(new ArtistItem(artistId, artistName));
         }
-        return topArtistsIds;
+        return topArtists;
     }
 
-    private List<String> getTopSongsIds(JsonNode shelfRenderer) {
-        List<String> topSongsIds = new ArrayList<>();
+    private List<SongItem> getTopSongs(JsonNode shelfRenderer) {
+        List<SongItem> topSongs = new ArrayList<>();
         ArrayNode songItemsArray = (ArrayNode) shelfRenderer.findValue("contents");
         for (JsonNode songNode : songItemsArray) {
-            topSongsIds.add(songNode.findValue("videoId").asText());
+            String songId = songNode.findValue("videoId").asText();
+            List<JsonNode> values = songNode.findValue("flexColumns").findValues("musicResponsiveListItemFlexColumnRenderer");
+            String artistId = null;
+            String artistName = null;
+            for (JsonNode value : values) {
+                if (value.findValue("pageType") != null && "MUSIC_PAGE_TYPE_ARTIST".equals(value.findValue("pageType").asText())) {
+                    artistId = value.findValue("browseId").asText();
+                    artistName = value.findValue("runs").findValue("text").asText();
+                }
+            }
+            topSongs.add(new SongItem(songId, new ArtistItem(artistId, artistName)));
         }
-        return topSongsIds;
+        return topSongs;
     }
 
     @Override

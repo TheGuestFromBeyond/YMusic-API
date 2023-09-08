@@ -1,24 +1,27 @@
 package com.beyond.ymusicapi.response;
 
+import com.beyond.ymusicapi.response.model.ArtistItem;
+import com.beyond.ymusicapi.response.model.SongItem;
+
 import java.util.List;
 
 public class ChartResponse extends AbstractResponse {
-    private List<String> chartArtistsIds;
-    private List<String> chartSongsIds;
+    private List<ArtistItem> chartArtists;
+    private List<SongItem> chartSongs;
 
-    public List<String> getChartArtistsIds() {
-        return chartArtistsIds;
+    public List<ArtistItem> getChartArtists() {
+        return chartArtists;
     }
 
-    public void setChartArtistsIds(List<String> chartArtistsIds) {
-        this.chartArtistsIds = chartArtistsIds;
+    public void setChartArtists(List<ArtistItem> chartArtists) {
+        this.chartArtists = chartArtists;
     }
 
-    public List<String> getChartSongsIds() {
-        return chartSongsIds;
+    public List<SongItem> getChartSongs() {
+        return chartSongs;
     }
 
-    public void setChartSongsIds(List<String> chartSongsIds) {
-        this.chartSongsIds = chartSongsIds;
+    public void setChartSongs(List<SongItem> chartSongs) {
+        this.chartSongs = chartSongs;
     }
 }
