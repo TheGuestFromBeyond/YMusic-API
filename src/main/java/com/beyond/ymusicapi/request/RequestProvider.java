@@ -4,6 +4,7 @@ import com.beyond.ymusicapi.request.body.AbstractRequestBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,23 +19,27 @@ import java.util.stream.Collectors;
 public class RequestProvider {
     private OkHttpClient httpClient;
     private ObjectMapper objectMapper;
+    private List<String> neededHeaders;
+
+    @PostConstruct
+    private void init() {
+        neededHeaders = new ArrayList<>();
+        neededHeaders.add("accept");
+        neededHeaders.add("content-type");
+        neededHeaders.add("accept-language");
+        neededHeaders.add("authorization");
+        neededHeaders.add("cookie");
+    }
 
     public String doRequest(String url, AbstractRequestBody body) {
         return doRequest(url, body, new HashMap<>());
     }
 
     public String doRequest(String url, AbstractRequestBody body, Map<String, String> headers) {
-        List<String> neededHeaders = new ArrayList<>();
-        neededHeaders.add("accept");
-        neededHeaders.add("content-type");
-        neededHeaders.add("accept-language");
-        neededHeaders.add("authorization");
-        neededHeaders.add("cookie");
-        neededHeaders.add("origin");
-
         headers = headers.entrySet().stream()
                 .filter(entry -> neededHeaders.contains(entry.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        headers.put("origin", "https://music.youtube.com");
 
         String jsonBody = getRequestBodyJsonString(body);
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
