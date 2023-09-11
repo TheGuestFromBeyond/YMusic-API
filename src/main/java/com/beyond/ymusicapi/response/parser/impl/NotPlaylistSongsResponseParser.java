@@ -29,7 +29,12 @@ public class NotPlaylistSongsResponseParser extends AllSongsResponseParser {
         for (JsonNode songItemNode : songItemsArray) {
             SongItem songItem = new SongItem();
             songItem.setSongName(songItemNode.findValue("runs").findValue("text").asText());
-            songItem.setSongId(songItemNode.findValue("videoId").asText());
+
+            JsonNode videoIdNode = songItemNode.findValue("videoId");
+            if (videoIdNode == null) {
+                continue;
+            }
+            songItem.setSongId(videoIdNode.asText());
             songItem.setPlaylistId(songItemNode.findValue("playlistId").asText());
             songItems.add(songItem);
         }
