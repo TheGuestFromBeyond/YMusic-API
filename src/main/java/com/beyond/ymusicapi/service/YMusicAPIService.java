@@ -27,7 +27,6 @@ public class YMusicAPIService {
         String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
         NewReleasesBody body = new NewReleasesBody();
         body.setContext(context);
-        body.setBrowseId("FEmusic_new_releases_albums");
 
         String jsonResponse = requestProvider.doRequest(apiUrl, body, headers);
 
@@ -52,12 +51,12 @@ public class YMusicAPIService {
         return response;
     }
 
-    public void setDislikeToSong(String songId) {
+    public void setDislikeToSong(String songId, Map<String, String> headers) {
         String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.DISLIKE);
         RatingBody body = new RatingBody(songId);
         body.setContext(context);
 
-        requestProvider.doRequest(apiUrl, body);
+        requestProvider.doRequest(apiUrl, body, headers);
     }
 
     public void setLikeToSong(String songId) {

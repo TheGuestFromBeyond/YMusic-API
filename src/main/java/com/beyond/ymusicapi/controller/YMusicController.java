@@ -35,6 +35,11 @@ public class YMusicController {
         return service.getChartDataByCountry(countryCode);
     }
 
+    @GetMapping("/dislike/{songId}")
+    public void dislikeSong(@PathVariable String songId, @RequestHeader Map<String, String> headers) {
+        service.setDislikeToSong(songId, headers);
+    }
+
     @Autowired
     public void setService(YMusicAPIService service) {
         this.service = service;
