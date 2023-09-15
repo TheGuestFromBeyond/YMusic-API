@@ -14,7 +14,7 @@ public class SongLyricsBrowseIdResponseParser extends AbstractParser implements 
         JsonNode rootNode = getRootNodeFromStringResponse(jsonResponse);
         String browseId = "";
         for (JsonNode tabRenderer : rootNode.findValues("tabRenderer")) {
-            if (tabRenderer.findValue("pageType").asText().equals("MUSIC_PAGE_TYPE_TRACK_LYRICS")) {
+            if (tabRenderer.findValue("pageType") != null && tabRenderer.findValue("pageType").asText().equals("MUSIC_PAGE_TYPE_TRACK_LYRICS")) {
                 browseId = tabRenderer.findValue("browseId").asText();
             }
         }
