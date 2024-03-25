@@ -26,6 +26,7 @@ public class YMusicAPIService {
     public NewReleasesResponse getNewReleases(Map<String, String> headers) {
         String apiUrl = requestHelper.generateApiUrl(RequestHelper.RequestOperation.COMMON_OPERATION);
         NewReleasesBody body = new NewReleasesBody();
+        body.setBrowseId("FEmusic_new_releases_albums");
         body.setContext(context);
 
         String jsonResponse = requestProvider.doRequest(apiUrl, body, headers);

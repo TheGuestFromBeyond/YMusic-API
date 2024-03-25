@@ -35,6 +35,9 @@ public class AllSongsResponseParser extends AbstractParser implements Parser {
 
     protected List<SongItem> parseSongs(JsonNode playlistShelfRenderer) {
         ArrayNode songItemsArray = (ArrayNode) playlistShelfRenderer.findValue("contents");
+        if (songItemsArray == null) {
+            return new ArrayList<>();
+        }
         List<SongItem> songItems = new ArrayList<>();
         for (JsonNode songItemNode : songItemsArray) {
             SongItem songItem = new SongItem();
